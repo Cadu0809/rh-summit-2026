@@ -15,8 +15,9 @@
 </head>
 <body class="asserth-bg flex items-center justify-center min-h-screen p-4 font-sans">
 
-    <div class="bg-white rounded-3xl shadow-xl max-w-sm w-full relative overflow-hidden">
+    <div class="bg-white rounded-3xl shadow-xl max-w-sm w-full relative overflow-hidden border border-gray-100">
         
+        <!-- Detalhes Visuais Grupo Asserth -->
         <div class="flex space-x-1 mt-8 mb-6 justify-center">
             <div class="line-red"></div>
             <div class="line-orange"></div>
@@ -29,56 +30,62 @@
 
         <div class="text-center mb-6 px-8">
             <h2 class="text-2xl font-black text-gray-900 uppercase">Resgate seu brinde</h2>
-            <p class="text-gray-600 mt-2 text-sm italic">Preencha os dados abaixo e receba seu brinde.</p>
+            <p class="text-gray-600 mt-2 text-sm">Preencha os dados abaixo e receba seu brinde.</p>
         </div>
         
         <form id="prospeccaoForm" class="space-y-4 px-8 mb-8">
-            <input type="hidden" id="event_name" value="RH SUMMIT 2026">
-            
+            <!-- Campo de Evento -->
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Evento</label>
+                <input type="text" id="event_name" value="RH SUMMIT 2026" readonly class="w-full p-4 bg-gray-100 border border-gray-200 rounded-xl text-gray-500 font-bold cursor-not-allowed outline-none">
+            </div>
+
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Nome Completo</label>
-                <input type="text" id="name" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600">
+                <input type="text" id="name" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
             </div>
             
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Cargo</label>
-                <input type="text" id="position" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600">
+                <input type="text" id="position" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
             </div>
             
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">WhatsApp</label>
-                <input type="tel" id="phone" placeholder="(11) 99999-9999" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600">
+                <input type="tel" id="phone" placeholder="(11) 99999-9999" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
             </div>
 
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">E-mail</label>
-                <input type="email" id="email" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600">
+                <input type="email" id="email" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
             </div>
             
-            <button type="submit" id="btnEnviar" class="w-full bg-gray-900 text-white font-bold py-5 rounded-2xl hover:bg-black transition-all shadow-lg uppercase tracking-widest">
+            <button type="submit" id="btnEnviar" class="w-full bg-gray-900 text-white font-bold py-5 rounded-2xl hover:bg-black transition-all shadow-lg uppercase tracking-widest text-lg">
                 ENVIAR
             </button>
         </form>
 
-        <div id="responseMsg" class="hidden p-8 text-center bg-green-50 text-green-800 font-bold border-t border-green-100 italic">
-            ✓ Cadastro realizado com sucesso!
+        <div id="responseMsg" class="hidden p-8 text-center bg-green-50 text-green-800 font-bold border-t border-green-100">
+            ✓ Sucesso! Entraremos em contato em breve.
         </div>
 
+        <!-- Rodapé RH Summit -->
         <div class="event-footer-bg p-6 flex justify-center items-center">
             <img src="https://tdstorage.s3.sa-east-1.amazonaws.com/WiJloDcfmYh0.png" alt="RH Summit" class="h-10 w-auto object-contain">
         </div>
     </div>
 
     <script>
-        const webhookBase = 'https://grupoasserth.bitrix24.com.br/rest/1/wpzed8n2yoinc89d/';
+        // Webhook atualizado
+        const webhookBase = 'https://grupoasserth.bitrix24.com.br/rest/1/ymcq9u5562s4tmam/';
 
         document.getElementById('prospeccaoForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnEnviar');
             btn.disabled = true;
-            btn.innerText = "PROCESSANDO...";
+            btn.innerText = "ENVIANDO...";
 
-            const dados = {
+            const payload = {
                 nome: document.getElementById('name').value,
                 cargo: document.getElementById('position').value,
                 fone: document.getElementById('phone').value,
@@ -87,35 +94,37 @@
             };
 
             try {
-                // PASSO 1: CRIAR O CONTATO
+                // PASSO 1: Criar Contato com o Cargo mapeado
                 const respContato = await fetch(`${webhookBase}crm.contact.add.json`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         fields: {
-                            "NAME": dados.nome,
-                            "POST": dados.cargo,
-                            "PHONE": [{ "VALUE": dados.fone, "VALUE_TYPE": "WORK" }],
-                            "EMAIL": [{ "VALUE": dados.email, "VALUE_TYPE": "WORK" }],
-                            "OPENED": "Y"
+                            "NAME": payload.nome,
+                            "POST": payload.cargo, // Cargo no campo nativo do contato
+                            "PHONE": [{ "VALUE": payload.fone, "VALUE_TYPE": "WORK" }],
+                            "EMAIL": [{ "VALUE": payload.email, "VALUE_TYPE": "WORK" }]
                         }
                     })
                 });
                 
-                const resultadoContato = await respContato.json();
-                const contatoId = resultadoContato.result;
+                const resContato = await respContato.json();
+                const contatoId = resContato.result;
 
-                // PASSO 2: CRIAR O NEGÓCIO VINCULADO AO CONTATO
+                // PASSO 2: Criar Negócio na Categoria 94 com os campos personalizados
                 await fetch(`${webhookBase}crm.deal.add.json`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         fields: {
-                            "TITLE": `Negócio: ${dados.nome} (RH Summit 2026)`,
+                            "TITLE": `Negócio: ${payload.nome} (RH Summit 2026)`,
                             "CATEGORY_ID": 94,
-                            "CONTACT_ID": contatoId, // Aqui acontece o vínculo automático
-                            "COMMENTS": `Lead vindo do evento RH Summit 2026. Cargo: ${dados.cargo}`,
-                            "SOURCE_ID": "EVENT"
+                            "CONTACT_ID": contatoId,
+                            "SOURCE_ID": "EVENT",
+                            // Campos Personalizados mapeados
+                            "UF_CRM_1630004286": payload.cargo,
+                            "UF_CRM_1689167465": payload.evento,
+                            "COMMENTS": "Lead capturado via QR Code no evento RH Summit 2026."
                         }
                     })
                 });
@@ -124,7 +133,7 @@
                 document.getElementById('responseMsg').classList.remove('hidden');
 
             } catch (err) {
-                alert("Erro ao sincronizar com o Bitrix24. Tente novamente.");
+                alert("Erro ao sincronizar dados. Tente novamente.");
                 btn.disabled = false;
                 btn.innerText = "ENVIAR";
             }
