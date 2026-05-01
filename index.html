@@ -11,6 +11,7 @@
         .line-orange { border-top: 4px solid #f6a01a; width: 50px; }
         .line-red { border-top: 4px solid #d32f2f; width: 50px; }
         .event-footer-bg { background-color: #1f2937; }
+        /* Centralização Vertical Absoluta */
         .content-area { min-height: 420px; display: flex; flex-direction: column; justify-content: center; }
     </style>
 </head>
@@ -100,9 +101,10 @@
                             "CATEGORY_ID": 94,
                             "STAGE_ID": "C94:NEW",
                             "CONTACT_ID": contatoId,
-                            "SOURCE_ID": "57", // STATUS_ID identificado no HTML técnico
+                            // TESTE COM ID DE ELEMENTO (2028) IDENTIFICADO NO HTML
+                            "SOURCE_ID": "2028", 
                             "UF_CRM_1630004286": payload.cargo,
-                            "COMMENTS": "FONTE: RH SUMMIT 2026 | Lead via formulário QR Code."
+                            "COMMENTS": "FONTE: RH SUMMIT 2026 | Capturado via formulário."
                         }
                     })
                 });
