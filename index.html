@@ -11,73 +11,62 @@
         .line-orange { border-top: 4px solid #f6a01a; width: 50px; }
         .line-red { border-top: 4px solid #d32f2f; width: 50px; }
         .event-footer-bg { background-color: #1f2937; }
-        /* Garante que o container interno tenha altura fixa para centralização perfeita */
-        .content-area { min-height: 450px; display: flex; flex-direction: column; justify-content: center; }
+        /* Centralização Vertical Perfeita */
+        .content-container { min-height: 420px; display: flex; flex-direction: column; justify-content: center; }
     </style>
 </head>
 <body class="asserth-bg flex items-center justify-center min-h-screen p-4 font-sans">
 
     <div class="bg-white rounded-3xl shadow-xl max-w-sm w-full relative overflow-hidden border border-gray-100">
         
-        <!-- Detalhes Coloridos Asserth -->
+        <!-- Topo Asserth -->
         <div class="flex space-x-1 mt-8 mb-6 justify-center">
             <div class="line-red"></div>
             <div class="line-orange"></div>
             <div class="line-green"></div>
         </div>
 
-        <!-- Logo Grupo Asserth -->
         <div class="flex justify-center mb-4 px-8">
             <img src="https://www.grupoasserth.com.br/wp-content/uploads/2021/10/asserth.png" alt="Grupo Asserth" class="h-12 w-auto object-contain">
         </div>
 
-        <!-- Área de Conteúdo Centralizado -->
-        <div class="content-area">
+        <!-- Área Centralizada -->
+        <div class="content-container">
             
-            <!-- Bloco Inicial: Título e Formulário -->
             <div id="mainContent">
                 <div class="text-center mb-6 px-8">
-                    <h2 class="text-2xl font-black text-gray-900 uppercase leading-tight">Resgate seu brinde</h2>
+                    <h2 class="text-2xl font-black text-gray-900 uppercase">Resgate seu brinde</h2>
                     <p class="text-gray-600 mt-2 text-sm italic">Preencha os dados abaixo e receba seu brinde.</p>
                 </div>
                 
                 <form id="prospeccaoForm" class="space-y-4 px-8 mb-8">
-                    <input type="hidden" id="event_name" value="RH SUMMIT 2026">
-                    
                     <div>
                         <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Nome Completo</label>
                         <input type="text" id="name" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
                     </div>
-                    
                     <div>
                         <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Cargo</label>
                         <input type="text" id="position" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
                     </div>
-                    
                     <div>
                         <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">WhatsApp</label>
                         <input type="tel" id="phone" placeholder="(11) 99999-9999" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
                     </div>
-
                     <div>
                         <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">E-mail</label>
                         <input type="email" id="email" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
                     </div>
-                    
-                    <button type="submit" id="btnEnviar" class="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl hover:bg-black transition-all shadow-lg uppercase tracking-widest">
+                    <button type="submit" id="btnEnviar" class="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl hover:bg-black transition-all uppercase tracking-widest shadow-lg">
                         ENVIAR
                     </button>
                 </form>
             </div>
 
-            <!-- Mensagem de Sucesso (Substitui o conteúdo acima e fica centralizada) -->
+            <!-- Sucesso Centralizado -->
             <div id="responseMsg" class="hidden px-8 text-center bg-white">
-                <div class="flex justify-center mb-6">
-                    <span class="text-6xl text-green-600 font-bold">✓</span>
-                </div>
+                <div class="text-6xl text-green-600 mb-6 font-bold">✓</div>
                 <h2 class="text-3xl font-black text-gray-900 uppercase italic leading-tight">GRAVADO COM SUCESSO!</h2>
             </div>
-
         </div>
 
         <!-- Rodapé RH Summit -->
@@ -99,8 +88,7 @@
                 nome: document.getElementById('name').value,
                 cargo: document.getElementById('position').value,
                 fone: document.getElementById('phone').value,
-                email: document.getElementById('email').value,
-                evento: document.getElementById('event_name').value
+                email: document.getElementById('email').value
             };
 
             try {
@@ -121,7 +109,7 @@
                 const resContato = await respContato.json();
                 const contatoId = resContato.result;
 
-                // PASSO 2: Criar Negócio na Categoria 94 / Fase Lead Gerado
+                // PASSO 2: Criar Negócio na Categoria 94 / Fase Lead Gerado (C94:NEW)
                 await fetch(`${webhookBase}crm.deal.add.json`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -131,15 +119,13 @@
                             "CATEGORY_ID": 94,
                             "STAGE_ID": "C94:NEW",
                             "CONTACT_ID": contatoId,
-                            "SOURCE_ID": "EVENT",
+                            "SOURCE_ID": "13", // ID 13 referente à fonte RH Summit 2026
                             "UF_CRM_1630004286": payload.cargo,
-                            "UF_CRM_1689167465": payload.evento,
                             "COMMENTS": "Lead capturado via QR Code no evento RH Summit 2026."
                         }
                     })
                 });
 
-                // Centralização e troca de conteúdo
                 document.getElementById('mainContent').style.display = 'none';
                 document.getElementById('responseMsg').classList.remove('hidden');
 
