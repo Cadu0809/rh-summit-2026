@@ -19,21 +19,18 @@
 
     <div class="bg-white rounded-3xl shadow-xl max-w-sm w-full relative overflow-hidden border border-gray-100">
         
-        <!-- Detalhes Superiores Asserth -->
+        <!-- Topo Asserth -->
         <div class="flex space-x-1 mt-8 mb-6 justify-center">
             <div class="line-red"></div>
             <div class="line-orange"></div>
             <div class="line-green"></div>
         </div>
 
-        <!-- Logo Superior -->
         <div class="flex justify-center mb-4 px-8">
             <img src="https://www.grupoasserth.com.br/wp-content/uploads/2021/10/asserth.png" alt="Grupo Asserth" class="h-12 w-auto object-contain">
         </div>
 
         <div class="content-area">
-            
-            <!-- Bloco do Formulário -->
             <div id="mainContent">
                 <div class="text-center mb-6 px-8">
                     <h2 class="text-2xl font-black text-gray-900 uppercase">Resgate seu brinde</h2>
@@ -52,15 +49,13 @@
                 </form>
             </div>
 
-            <!-- Sucesso Centralizado e Limpo -->
+            <!-- Sucesso centralizado e limpo -->
             <div id="responseMsg" class="hidden px-8 text-center bg-white">
                 <div class="text-6xl text-green-600 mb-6 font-bold">✓</div>
                 <h2 class="text-3xl font-black text-gray-900 uppercase italic leading-tight">GRAVADO COM SUCESSO!</h2>
             </div>
-
         </div>
 
-        <!-- Rodapé RH Summit -->
         <div class="event-footer-bg p-6 flex justify-center items-center">
             <img src="https://tdstorage.s3.sa-east-1.amazonaws.com/WiJloDcfmYh0.png" alt="RH Summit" class="h-10 w-auto object-contain">
         </div>
@@ -100,24 +95,34 @@
                 const resContato = await respContato.json();
                 const contatoId = resContato.result;
 
-                // Criar Negócio na Categoria 94 com o ID de Fonte correto
+                // Criar Negócio com Tripla Verificação de Fonte
                 await fetch(`${webhookBase}crm.deal.add.json`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         fields: {
-                            "TITLE": `Prospecção Ativa: ${payload.nome} (RH Summit 2026)`,
+                            "TITLE": `Negócio: ${payload.nome} (RH Summit 2026)`,
                             "CATEGORY_ID": 94,
                             "STAGE_ID": "C94:NEW",
                             "CONTACT_ID": contatoId,
-                            "SOURCE_ID": "2028", // ID interno validado pelo Inspecionar
+                            
+                            // 1. Fonte Nativa (Tentativa com ID String)
+                            "SOURCE_ID": "2028", 
+                            
+                            // 2. Identificador de Origem (Essencial para Relatórios BI)
+                            "ORIGINATOR_ID": "GITHUB_FORM",
+                            "ORIGIN_ID": "RH_SUMMIT_2026",
+                            
+                            // 3. Campos de Rastreabilidade UTM
+                            "UTM_SOURCE": "RH Summit",
+                            "UTM_CAMPAIGN": "RH Summit 2026",
+                            
                             "UF_CRM_1630004286": payload.cargo,
-                            "COMMENTS": "FONTE: RH SUMMIT 2026 | Lead capturado via QR Code no evento."
+                            "COMMENTS": "FONTE: RH SUMMIT 2026 | Capturado via formulário."
                         }
                     })
                 });
 
-                // Esconde formulário e mostra sucesso centralizado
                 document.getElementById('mainContent').style.display = 'none';
                 document.getElementById('responseMsg').classList.remove('hidden');
 
