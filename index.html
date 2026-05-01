@@ -48,6 +48,7 @@
                 </form>
             </div>
 
+            <!-- Sucesso centralizado -->
             <div id="responseMsg" class="hidden px-8 text-center bg-white">
                 <div class="text-6xl text-green-600 mb-6 font-bold">✓</div>
                 <h2 class="text-3xl font-black text-gray-900 uppercase italic leading-tight">GRAVADO COM SUCESSO!</h2>
@@ -66,7 +67,7 @@
             e.preventDefault();
             const btn = document.getElementById('btnEnviar');
             btn.disabled = true;
-            btn.innerText = "PROCESSANDO...";
+            btn.innerText = "ENVIANDO...";
 
             const payload = {
                 nome: document.getElementById('name').value,
@@ -98,13 +99,13 @@
                     body: JSON.stringify({
                         fields: {
                             "TITLE": `Prospecção Ativa: ${payload.nome} (RH Summit 2026)`,
-                            "CATEGORY_ID": 94,
+                            "CATEGORY_ID": "94",
                             "STAGE_ID": "C94:NEW",
                             "CONTACT_ID": contatoId,
-                            // TESTE COM ID DE ELEMENTO (2028) IDENTIFICADO NO HTML
-                            "SOURCE_ID": "2028", 
+                            // O 57 é o STATUS_ID que mapeamos no seu HTML técnico
+                            "SOURCE_ID": "57", 
                             "UF_CRM_1630004286": payload.cargo,
-                            "COMMENTS": "FONTE: RH SUMMIT 2026 | Capturado via formulário."
+                            "COMMENTS": "FONTE: RH SUMMIT 2026 | Lead capturado via QR Code no evento."
                         }
                     })
                 });
