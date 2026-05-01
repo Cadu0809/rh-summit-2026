@@ -17,113 +17,116 @@
 
     <div class="bg-white rounded-3xl shadow-xl max-w-sm w-full relative overflow-hidden">
         
-        <!-- Detalhes Coloridos Asserth -->
         <div class="flex space-x-1 mt-8 mb-6 justify-center">
             <div class="line-red"></div>
             <div class="line-orange"></div>
             <div class="line-green"></div>
         </div>
 
-        <!-- Logo Grupo Asserth -->
         <div class="flex justify-center mb-8 px-8">
             <img src="https://www.grupoasserth.com.br/wp-content/uploads/2021/10/asserth.png" alt="Grupo Asserth" class="h-12 w-auto object-contain">
         </div>
 
-        <!-- Título e Instrução -->
         <div class="text-center mb-6 px-8">
-            <h2 class="text-2xl font-black text-gray-900 uppercase leading-tight">Resgate seu brinde</h2>
+            <h2 class="text-2xl font-black text-gray-900 uppercase">Resgate seu brinde</h2>
             <p class="text-gray-600 mt-2 text-sm italic">Preencha os dados abaixo e receba seu brinde.</p>
         </div>
         
-        <!-- Formulário -->
-        <form id="leadForm" class="space-y-4 px-8 mb-8">
-            <!-- Campo de Evento Visível e Readonly -->
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Evento</label>
-                <input type="text" name="source_event" value="RH SUMMIT 2026" readonly class="w-full p-4 bg-gray-100 border border-gray-200 rounded-xl text-gray-500 font-bold cursor-not-allowed outline-none">
-            </div>
-
+        <form id="prospeccaoForm" class="space-y-4 px-8 mb-8">
+            <input type="hidden" id="event_name" value="RH SUMMIT 2026">
+            
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Nome Completo</label>
-                <input type="text" name="name" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 outline-none transition shadow-sm">
+                <input type="text" id="name" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600">
             </div>
             
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Cargo</label>
-                <input type="text" name="position" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 outline-none transition shadow-sm">
+                <input type="text" id="position" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600">
             </div>
             
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">WhatsApp</label>
-                <input type="tel" name="phone" placeholder="(11) 99999-9999" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 outline-none transition shadow-sm">
+                <input type="tel" id="phone" placeholder="(11) 99999-9999" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600">
             </div>
 
             <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">E-mail Corporativo</label>
-                <input type="email" name="email" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 outline-none transition shadow-sm">
+                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">E-mail</label>
+                <input type="email" id="email" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600">
             </div>
             
-            <button type="submit" class="w-full bg-gray-900 text-white font-bold py-5 rounded-2xl hover:bg-black transition-all shadow-lg uppercase tracking-widest text-lg active:scale-95">
+            <button type="submit" id="btnEnviar" class="w-full bg-gray-900 text-white font-bold py-5 rounded-2xl hover:bg-black transition-all shadow-lg uppercase tracking-widest">
                 ENVIAR
             </button>
         </form>
 
-        <!-- Mensagem de Sucesso -->
-        <div id="responseMsg" class="hidden p-8 text-center bg-green-50 text-green-800 font-bold border-t border-green-100 animate-pulse">
-            <p class="text-xl">✓ Sucesso!</p>
-            <p class="text-sm font-medium mt-1">Entraremos em contato em breve.</p>
+        <div id="responseMsg" class="hidden p-8 text-center bg-green-50 text-green-800 font-bold border-t border-green-100 italic">
+            ✓ Cadastro realizado com sucesso!
         </div>
 
-        <!-- Rodapé com fundo escuro para destacar a logo do RH SUMMIT -->
         <div class="event-footer-bg p-6 flex justify-center items-center">
             <img src="https://tdstorage.s3.sa-east-1.amazonaws.com/WiJloDcfmYh0.png" alt="RH Summit" class="h-10 w-auto object-contain">
         </div>
     </div>
 
-    <!-- Script de Integração com Bitrix24 -->
     <script>
-        document.getElementById('leadForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            
-            // Webhook verificado para o Grupo Asserth
-            const bitrixURL = 'https://grupoasserth.bitrix24.com.br/rest/1/wpzed8n2yoinc89d/crm.lead.add.json';
+        const webhookBase = 'https://grupoasserth.bitrix24.com.br/rest/1/wpzed8n2yoinc89d/';
 
-            const payload = {
-                fields: {
-                    TITLE: "RH SUMMIT 2026: " + formData.get('name'),
-                    NAME: formData.get('name'),
-                    POST: formData.get('position'),
-                    PHONE: [{ "VALUE": formData.get('phone'), "VALUE_TYPE": "WORK" }],
-                    EMAIL: [{ "VALUE": formData.get('email'), "VALUE_TYPE": "WORK" }],
-                    
-                    // Configuração de Origem
-                    SOURCE_ID: "EVENT", 
-                    SOURCE_DESCRIPTION: formData.get('source_event'),
-                    
-                    // Direcionamento para o Pipeline RH SUMMIT (ID 94)
-                    // Como não definimos STAGE_ID, cairá na primeira fase padrão.
-                    CATEGORY_ID: 94, 
-                    
-                    COMMENTS: "Lead capturado via QR Code no RH Summit 2026 para envio posterior de brinde."
-                }
+        document.getElementById('prospeccaoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnEnviar');
+            btn.disabled = true;
+            btn.innerText = "PROCESSANDO...";
+
+            const dados = {
+                nome: document.getElementById('name').value,
+                cargo: document.getElementById('position').value,
+                fone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                evento: document.getElementById('event_name').value
             };
 
             try {
-                // Realiza o envio via POST
-                await fetch(bitrixURL, {
+                // PASSO 1: CRIAR O CONTATO
+                const respContato = await fetch(`${webhookBase}crm.contact.add.json`, {
                     method: 'POST',
-                    mode: 'no-cors', // Utilizado para evitar bloqueios de segurança em envios de formulários simples
-                    body: JSON.stringify(payload)
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fields: {
+                            "NAME": dados.nome,
+                            "POST": dados.cargo,
+                            "PHONE": [{ "VALUE": dados.fone, "VALUE_TYPE": "WORK" }],
+                            "EMAIL": [{ "VALUE": dados.email, "VALUE_TYPE": "WORK" }],
+                            "OPENED": "Y"
+                        }
+                    })
                 });
                 
-                // Feedback visual de sucesso
-                document.getElementById('leadForm').classList.add('hidden');
+                const resultadoContato = await respContato.json();
+                const contatoId = resultadoContato.result;
+
+                // PASSO 2: CRIAR O NEGÓCIO VINCULADO AO CONTATO
+                await fetch(`${webhookBase}crm.deal.add.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fields: {
+                            "TITLE": `Negócio: ${dados.nome} (RH Summit 2026)`,
+                            "CATEGORY_ID": 94,
+                            "CONTACT_ID": contatoId, // Aqui acontece o vínculo automático
+                            "COMMENTS": `Lead vindo do evento RH Summit 2026. Cargo: ${dados.cargo}`,
+                            "SOURCE_ID": "EVENT"
+                        }
+                    })
+                });
+
+                document.getElementById('prospeccaoForm').classList.add('hidden');
                 document.getElementById('responseMsg').classList.remove('hidden');
-                
+
             } catch (err) {
-                console.error("Erro na integração:", err);
-                alert("Erro ao enviar os dados. Verifique sua conexão e tente novamente.");
+                alert("Erro ao sincronizar com o Bitrix24. Tente novamente.");
+                btn.disabled = false;
+                btn.innerText = "ENVIAR";
             }
         });
     </script>
