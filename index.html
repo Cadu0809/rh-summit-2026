@@ -17,7 +17,6 @@
 
     <div class="bg-white rounded-3xl shadow-xl max-w-sm w-full relative overflow-hidden border border-gray-100">
         
-        <!-- Detalhes Visuais Grupo Asserth -->
         <div class="flex space-x-1 mt-8 mb-6 justify-center">
             <div class="line-red"></div>
             <div class="line-orange"></div>
@@ -34,12 +33,8 @@
         </div>
         
         <form id="prospeccaoForm" class="space-y-4 px-8 mb-8">
-            <!-- Campo de Evento -->
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Evento</label>
-                <input type="text" id="event_name" value="RH SUMMIT 2026" readonly class="w-full p-4 bg-gray-100 border border-gray-200 rounded-xl text-gray-500 font-bold cursor-not-allowed outline-none">
-            </div>
-
+            <input type="hidden" id="event_name" value="RH SUMMIT 2026">
+            
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Nome Completo</label>
                 <input type="text" id="name" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
@@ -69,14 +64,12 @@
             ✓ Sucesso! Entraremos em contato em breve.
         </div>
 
-        <!-- Rodapé RH Summit -->
         <div class="event-footer-bg p-6 flex justify-center items-center">
             <img src="https://tdstorage.s3.sa-east-1.amazonaws.com/WiJloDcfmYh0.png" alt="RH Summit" class="h-10 w-auto object-contain">
         </div>
     </div>
 
     <script>
-        // Webhook atualizado
         const webhookBase = 'https://grupoasserth.bitrix24.com.br/rest/1/ymcq9u5562s4tmam/';
 
         document.getElementById('prospeccaoForm').addEventListener('submit', async (e) => {
@@ -94,14 +87,14 @@
             };
 
             try {
-                // PASSO 1: Criar Contato com o Cargo mapeado
+                // PASSO 1: Criar Contato
                 const respContato = await fetch(`${webhookBase}crm.contact.add.json`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         fields: {
                             "NAME": payload.nome,
-                            "POST": payload.cargo, // Cargo no campo nativo do contato
+                            "POST": payload.cargo,
                             "PHONE": [{ "VALUE": payload.fone, "VALUE_TYPE": "WORK" }],
                             "EMAIL": [{ "VALUE": payload.email, "VALUE_TYPE": "WORK" }]
                         }
@@ -111,17 +104,17 @@
                 const resContato = await respContato.json();
                 const contatoId = resContato.result;
 
-                // PASSO 2: Criar Negócio na Categoria 94 com os campos personalizados
+                // PASSO 2: Criar Negócio na Categoria 94 / Fase Lead Gerado
                 await fetch(`${webhookBase}crm.deal.add.json`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         fields: {
-                            "TITLE": `Negócio: ${payload.nome} (RH Summit 2026)`,
+                            "TITLE": `Prospecção Ativa: ${payload.nome} (RH Summit 2026)`,
                             "CATEGORY_ID": 94,
+                            "STAGE_ID": "C94:NEW", // Fase: Lead Gerado
                             "CONTACT_ID": contatoId,
                             "SOURCE_ID": "EVENT",
-                            // Campos Personalizados mapeados
                             "UF_CRM_1630004286": payload.cargo,
                             "UF_CRM_1689167465": payload.evento,
                             "COMMENTS": "Lead capturado via QR Code no evento RH Summit 2026."
@@ -133,7 +126,7 @@
                 document.getElementById('responseMsg').classList.remove('hidden');
 
             } catch (err) {
-                alert("Erro ao sincronizar dados. Tente novamente.");
+                alert("Erro ao enviar. Tente novamente.");
                 btn.disabled = false;
                 btn.innerText = "ENVIAR";
             }
