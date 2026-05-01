@@ -17,53 +17,64 @@
 
     <div class="bg-white rounded-3xl shadow-xl max-w-sm w-full relative overflow-hidden border border-gray-100">
         
+        <!-- Detalhes Coloridos Asserth -->
         <div class="flex space-x-1 mt-8 mb-6 justify-center">
             <div class="line-red"></div>
             <div class="line-orange"></div>
             <div class="line-green"></div>
         </div>
 
+        <!-- Logo Grupo Asserth -->
         <div class="flex justify-center mb-8 px-8">
             <img src="https://www.grupoasserth.com.br/wp-content/uploads/2021/10/asserth.png" alt="Grupo Asserth" class="h-12 w-auto object-contain">
         </div>
 
-        <div class="text-center mb-6 px-8">
-            <h2 class="text-2xl font-black text-gray-900 uppercase">Resgate seu brinde</h2>
-            <p class="text-gray-600 mt-2 text-sm">Preencha os dados abaixo e receba seu brinde.</p>
+        <!-- Bloco de Conteúdo (Título, Instrução e Formulário) -->
+        <div id="mainContent">
+            <div class="text-center mb-6 px-8">
+                <h2 class="text-2xl font-black text-gray-900 uppercase leading-tight">Resgate seu brinde</h2>
+                <p class="text-gray-600 mt-2 text-sm italic">Preencha os dados abaixo e receba seu brinde.</p>
+            </div>
+            
+            <form id="prospeccaoForm" class="space-y-4 px-8 mb-8">
+                <input type="hidden" id="event_name" value="RH SUMMIT 2026">
+                
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Nome Completo</label>
+                    <input type="text" id="name" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
+                </div>
+                
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Cargo</label>
+                    <input type="text" id="position" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
+                </div>
+                
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">WhatsApp</label>
+                    <input type="tel" id="phone" placeholder="(11) 99999-9999" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">E-mail</label>
+                    <input type="email" id="email" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
+                </div>
+                
+                <button type="submit" id="btnEnviar" class="w-full bg-gray-900 text-white font-bold py-5 rounded-2xl hover:bg-black transition-all shadow-lg uppercase tracking-widest text-lg">
+                    ENVIAR
+                </button>
+            </form>
         </div>
-        
-        <form id="prospeccaoForm" class="space-y-4 px-8 mb-8">
-            <input type="hidden" id="event_name" value="RH SUMMIT 2026">
-            
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Nome Completo</label>
-                <input type="text" id="name" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
-            </div>
-            
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Cargo</label>
-                <input type="text" id="position" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
-            </div>
-            
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">WhatsApp</label>
-                <input type="tel" id="phone" placeholder="(11) 99999-9999" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
-            </div>
 
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">E-mail</label>
-                <input type="email" id="email" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-600 transition">
+        <!-- Mensagem de Sucesso (Ficará centralizada e substituirá o conteúdo acima) -->
+        <div id="responseMsg" class="hidden py-16 px-8 text-center bg-white">
+            <div class="flex justify-center mb-4">
+                <span class="text-5xl text-green-600 font-bold">✓</span>
             </div>
-            
-            <button type="submit" id="btnEnviar" class="w-full bg-gray-900 text-white font-bold py-5 rounded-2xl hover:bg-black transition-all shadow-lg uppercase tracking-widest text-lg">
-                ENVIAR
-            </button>
-        </form>
-
-        <div id="responseMsg" class="hidden p-8 text-center bg-green-50 text-green-800 font-bold border-t border-green-100">
-            ✓ Sucesso! Entraremos em contato em breve.
+            <p class="text-2xl font-black text-gray-900 uppercase italic">Gravado com sucesso!</p>
+            <p class="text-gray-600 mt-4 font-medium italic">Entraremos em contato em breve.</p>
         </div>
 
+        <!-- Rodapé RH Summit -->
         <div class="event-footer-bg p-6 flex justify-center items-center">
             <img src="https://tdstorage.s3.sa-east-1.amazonaws.com/WiJloDcfmYh0.png" alt="RH Summit" class="h-10 w-auto object-contain">
         </div>
@@ -112,7 +123,7 @@
                         fields: {
                             "TITLE": `Prospecção Ativa: ${payload.nome} (RH Summit 2026)`,
                             "CATEGORY_ID": 94,
-                            "STAGE_ID": "C94:NEW", // Fase: Lead Gerado
+                            "STAGE_ID": "C94:NEW",
                             "CONTACT_ID": contatoId,
                             "SOURCE_ID": "EVENT",
                             "UF_CRM_1630004286": payload.cargo,
@@ -122,7 +133,8 @@
                     })
                 });
 
-                document.getElementById('prospeccaoForm').classList.add('hidden');
+                // Esconde o conteúdo inicial e mostra apenas o sucesso
+                document.getElementById('mainContent').classList.add('hidden');
                 document.getElementById('responseMsg').classList.remove('hidden');
 
             } catch (err) {
