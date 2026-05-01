@@ -11,7 +11,7 @@
         .line-orange { border-top: 4px solid #f6a01a; width: 50px; }
         .line-red { border-top: 4px solid #d32f2f; width: 50px; }
         .event-footer-bg { background-color: #1f2937; }
-        /* Centralização Vertical Absoluta */
+        /* Centralização Vertical Absoluta entre os logos */
         .content-area { min-height: 420px; display: flex; flex-direction: column; justify-content: center; }
     </style>
 </head>
@@ -19,17 +19,21 @@
 
     <div class="bg-white rounded-3xl shadow-xl max-w-sm w-full relative overflow-hidden border border-gray-100">
         
+        <!-- Detalhes Superiores Asserth -->
         <div class="flex space-x-1 mt-8 mb-6 justify-center">
             <div class="line-red"></div>
             <div class="line-orange"></div>
             <div class="line-green"></div>
         </div>
 
+        <!-- Logo Superior -->
         <div class="flex justify-center mb-4 px-8">
             <img src="https://www.grupoasserth.com.br/wp-content/uploads/2021/10/asserth.png" alt="Grupo Asserth" class="h-12 w-auto object-contain">
         </div>
 
         <div class="content-area">
+            
+            <!-- Bloco do Formulário -->
             <div id="mainContent">
                 <div class="text-center mb-6 px-8">
                     <h2 class="text-2xl font-black text-gray-900 uppercase">Resgate seu brinde</h2>
@@ -48,13 +52,15 @@
                 </form>
             </div>
 
-            <!-- Sucesso centralizado e limpo -->
+            <!-- Sucesso Centralizado e Limpo -->
             <div id="responseMsg" class="hidden px-8 text-center bg-white">
                 <div class="text-6xl text-green-600 mb-6 font-bold">✓</div>
                 <h2 class="text-3xl font-black text-gray-900 uppercase italic leading-tight">GRAVADO COM SUCESSO!</h2>
             </div>
+
         </div>
 
+        <!-- Rodapé RH Summit -->
         <div class="event-footer-bg p-6 flex justify-center items-center">
             <img src="https://tdstorage.s3.sa-east-1.amazonaws.com/WiJloDcfmYh0.png" alt="RH Summit" class="h-10 w-auto object-contain">
         </div>
@@ -77,7 +83,7 @@
             };
 
             try {
-                // PASSO 1: Criar Contato
+                // Criar Contato
                 const respContato = await fetch(`${webhookBase}crm.contact.add.json`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -94,24 +100,24 @@
                 const resContato = await respContato.json();
                 const contatoId = resContato.result;
 
-                // PASSO 2: Criar Negócio
+                // Criar Negócio na Categoria 94 com o ID de Fonte correto
                 await fetch(`${webhookBase}crm.deal.add.json`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         fields: {
-                            "TITLE": `Negócio: ${payload.nome} (RH Summit 2026)`,
+                            "TITLE": `Prospecção Ativa: ${payload.nome} (RH Summit 2026)`,
                             "CATEGORY_ID": 94,
                             "STAGE_ID": "C94:NEW",
                             "CONTACT_ID": contatoId,
-                            // ALTERAÇÃO PARA SEGURANÇA:
-                            "SOURCE_ID": "RH Summit 2026", 
+                            "SOURCE_ID": "2028", // ID interno validado pelo Inspecionar
                             "UF_CRM_1630004286": payload.cargo,
-                            "COMMENTS": "FONTE: RH SUMMIT 2026 | Capturado via formulário GitHub."
+                            "COMMENTS": "FONTE: RH SUMMIT 2026 | Lead capturado via QR Code no evento."
                         }
                     })
                 });
 
+                // Esconde formulário e mostra sucesso centralizado
                 document.getElementById('mainContent').style.display = 'none';
                 document.getElementById('responseMsg').classList.remove('hidden');
 
